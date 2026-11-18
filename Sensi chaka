@@ -1,0 +1,121 @@
+
+-- SENSI CHACA VIP
+-- MENU FLOTANTE + FILTRO DE EQUIPOS
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "SENSI_CHACA_VIP"
+gui.ResetOnSpawn = false
+gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+-- CUADRO FLOTANTE
+local floating = Instance.new("TextButton")
+floating.Size = UDim2.new(0, 145, 0, 43)
+floating.Position = UDim2.new(0.5, -72, 0, 25)
+floating.Text = "SENSI CHACA VIP"
+floating.TextColor3 = Color3.fromRGB(255,0,0)
+floating.BackgroundColor3 = Color3.fromRGB(5,5,5)
+floating.TextSize = 15
+floating.Parent = gui
+
+Instance.new("UICorner", floating).CornerRadius =
+    UDim.new(0,15)
+
+-- MENU
+local menu = Instance.new("Frame")
+menu.Size = UDim2.new(0,270,0,230)
+menu.Position = UDim2.new(0.5,-135,0.5,-115)
+menu.BackgroundColor3 = Color3.fromRGB(12,12,12)
+menu.Visible = false
+menu.Parent = gui
+
+Instance.new("UICorner", menu).CornerRadius =
+    UDim.new(0,18)
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,0,0,45)
+title.BackgroundTransparency = 1
+title.Text = "SENSI CHACA VIP"
+title.TextColor3 = Color3.fromRGB(255,0,0)
+title.TextSize = 22
+title.Parent = menu
+
+-- FILTRO DE ENEMIGOS
+local function EsEnemigo(target)
+    if not target or target == LocalPlayer then
+        return false
+    end
+
+    if not LocalPlayer.Team or not target.Team then
+        return false
+    end
+
+    return LocalPlayer.Team ~= target.Team
+end
+
+local function ObtenerEnemigos()
+    local enemigos = {}
+
+    for _, target in ipairs(Players:GetPlayers()) do
+        if EsEnemigo(target) then
+            table.insert(enemigos,target)
+        end
+    end
+
+    return enemigos
+end
+
+-- BOTON DE DETECCION
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0.85,0,0,45)
+button.Position = UDim2.new(0.075,0,0,65)
+button.Text = "DETECTAR ENEMIGOS: OFF"
+button.TextColor3 = Color3.new(1,1,1)
+button.BackgroundColor3 = Color3.fromRGB(40,40,40)
+button.Parent = menu
+
+Instance.new("UICorner", button).CornerRadius =
+    UDim.new(0,12)
+
+local active = false
+
+button.MouseButton1Click:Connect(function()
+    active = not active
+
+    button.Text = active
+        and "DETECTAR ENEMIGOS: ON"
+        or "DETECTAR ENEMIGOS: OFF"
+
+    button.BackgroundColor3 = active
+        and Color3.fromRGB(130,0,0)
+        or Color3.fromRGB(40,40,40)
+
+    if active then
+        print("Enemigos detectados:", #ObtenerEnemigos())
+    end
+end)
+
+-- BOTON VISUAL AIMBOT
+local aim = Instance.new("TextButton")
+aim.Size = UDim2.new(0.85,0,0,45)
+aim.Position = UDim2.new(0.075,0,0,125)
+aim.Text = "AIMBOT CABEZA: OFF"
+aim.TextColor3 = Color3.new(1,1,1)
+aim.BackgroundColor3 = Color3.fromRGB(40,40,40)
+aim.Parent = menu
+
+Instance.new("UICorner", aim).CornerRadius =
+    UDim.new(0,12)
+
+aim.MouseButton1Click:Connect(function()
+    aim.Text = "AIMBOT CABEZA: VISUAL"
+end)
+
+-- ABRIR Y CERRAR
+floating.MouseButton1Click:Connect(function()
+    menu.Visible = not menu.Visible
+end)
+
+print("SENSI CHACA VIP CARGADO")
